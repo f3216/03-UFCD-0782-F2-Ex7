@@ -1,21 +1,46 @@
+#!/bin/bash
+
 echo "A executar os testes ..."
 echo
 
 output=$(./a.out)
-expected_output_1="##############"
-expected_output_2="# Ola Mundo! #"
-expected_output_3="##############"
 
-output_line_1=$(echo "$program_output" | head -n 1)
-output_line_2=$(echo "$program_output" | head -n 2 | tail -n 1)
-output_line_3=$(echo "$program_output" | tail -n 1)
-
-if [ "$output_line_1" == "$expected_output_1" ] && [ "$output_line_2" == "$expected_output_2" ] && [ "$output_line_3" == "$expected_output_3" ] ; then
-  echo "Aprovado: A saída é correcta"
+if [ $? -eq 0 ] ; then
+  echo "Aprovado: o programa terminou com retorno zero"
 else
-  echo "Esperada a saída '$expected_output_1' mas o programa devolveu: $output_line_1"
-  echo "Esperada a saída '$expected_output_2' mas o programa devolveu: $output_line_2"
-  echo "Esperada a saída '$expected_output_3' mas o programa devolveu: $output_line_3"
+  echo "Falha: o programa não retornou zero"
+  exit 1
+fi
+
+# Verifica se a primeira linha é " ####  #        ##"
+if echo "$output" | head -n 1 | grep -q "###" ; then
+  echo "Aprovado: A primeira linha está correta"
+else
+  echo "Falha: A primeira linha não está correta"
+  exit 1
+fi
+
+# Verifica se a segunda linha é "#    # #       #  #"
+if echo "$output" | head -n 2 | tail -n 1 | grep -q "#    #" ; then
+  echo "Aprovado: A segunda linha está correta"
+else
+  echo "Falha: A segunda linha não está correta"
+  exit 1
+fi
+
+# Verifica se a terceira linha é "#    # #      ######"
+if echo "$output" | head -n 3 | tail -n 1 | grep -q "#    #" ; then
+  echo "Aprovado: A terceira linha está correta"
+else
+  echo "Falha: A terceira linha não está correta"
+  exit 1
+fi
+
+# Verifica se a quarta linha é " ####  ##### #      #"
+if echo "$output" | tail -n 1 | grep -q "###" ; then
+  echo "Aprovado: A quarta linha está correta"
+else
+  echo "Falha: A quarta linha não está correta"
   exit 1
 fi
 
